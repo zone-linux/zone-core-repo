@@ -1,0 +1,4 @@
+# Repository working files
+*.files.tar.gz.old
+*.db.tar.gz.old
+.zone-repo.lock

@@ -10,20 +10,24 @@ Packages built from `zone-pkgbuild/core_pkgbuild/`:
 
 | Package | Description |
 |---|---|
-| `grub` | Custom GRUB build with Zone patches (requires update from 2.06 to current) |
-| `zone-calamares` | Calamares installer (updated to 3.3.x — rebuild required on Linux host) |
-| `zone-calamares-config` | Calamares configuration for Zone |
-| `zone-grub-theme` | GRUB menu theme |
+| `zone-calamares-config` | Calamares 3.4 configuration, branding, polkit rule, launcher |
+| `zone-grub-theme` | GRUB menu theme plus Zone `/etc/default/grub` and `40_custom` |
 | `zone-release` | Pacman hooks and OS release files |
+
+The old custom `grub` and `zone-calamares` packages were removed. Zone uses the
+official `grub` package and the AUR `calamares` package instead.
 
 ## Updating
 
-After building packages on a Linux host, run `zone-pkgbuild/upd-core.sh` to add the
-new `.pkg.tar.zst` files and regenerate the pacman repo database.
+Build and publish from `zone-pkgbuild/`:
 
-## Note
+```bash
+./build.sh --core --no-publish
+./publish.sh --core --prune --verify
+./publish.sh --core --commit        # commit locally; never pushes
+```
 
-The `grub` package in this repo is at version 2.06-4. The PKGBUILD must be updated
-on a Linux build host (pinned git commits need updating to current upstream HEAD).
-The `zone-calamares` package has been updated to 3.3.x in the PKGBUILD but the binary
-repo still contains 3.2.53-1 — a rebuild is required.
+`zone-grub-theme` no longer owns `/etc/default/grub` or `/etc/grub.d/40_custom`
+because the `grub` package owns those paths. It stages the Zone versions under
+`/usr/share/zone/grub/` and applies them from an install script and a pacman hook
+that fires whenever `grub` is installed or upgraded.
